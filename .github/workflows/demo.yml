@@ -19,6 +19,8 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
+    outputs:
+      userName:  ${{steps.userNameid.outputs.userName}}
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -31,6 +33,10 @@ jobs:
         with:
           path: dist
           name: dist-files
+      - name: publish user Name
+        id: userNameid
+        run : echo "userName=rahulsharma" >> $GITHUB_OUTPUT
+        
 
   deploy:
     needs: build
@@ -41,7 +47,9 @@ jobs:
         with: 
           path: dist
           name: dist-files
-      
+      - name : get user Name
+        run: echo " user name is  ${{needs.build.outputs.userName}}"
+
       - name: Display structure of downloaded files
         run: ls -R
 
